@@ -4,15 +4,18 @@ import MessageContainer from "./MessageContainer";
 import CreateUserModal from "../create";
 import UploadInput from "./UploadInput";
 import { useUsersContext } from "../../contexts/UsersContext";
+import DetailsUserModal from "../details";
 
 const Home = () => {
   const {
     isCreateUserOpen,
+    isDetailsUserOpen,
     users,
     usersRefetch,
     usersLoading,
     usersError,
-    toggleCreateUserModal
+    toggleCreateUserModal,
+    toggleDetailsUserModal
   } = useUsersContext();
 
   if (usersLoading) {
@@ -53,6 +56,10 @@ const Home = () => {
       <CreateUserModal
         open={isCreateUserOpen}
         handleClose={toggleCreateUserModal}
+      />
+      <DetailsUserModal
+        open={isDetailsUserOpen}
+        handleClose={toggleDetailsUserModal}
       />
     </>
   );
