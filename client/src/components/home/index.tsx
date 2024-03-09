@@ -1,19 +1,21 @@
 import { Box, Button, CircularProgress } from "@mui/material";
-import useAxios from "axios-hooks";
-import { useState } from "react";
 import UsersTable from "./UsersTable";
 import MessageContainer from "./MessageContainer";
 import CreateUserModal from "../create";
 import UploadInput from "./UploadInput";
+import { useUsersContext } from "../../contexts/UsersContext";
 
 const Home = () => {
-  const [isCreateUserOpen, setIsCreateUserOpen] = useState(false);
+  const {
+    isCreateUserOpen,
+    users,
+    usersRefetch,
+    usersLoading,
+    usersError,
+    toggleCreateUserModal
+  } = useUsersContext();
 
-  const [{ data, loading, error }, refetch] = useAxios(
-    `${process.env.REACT_APP_SERVER_BASE_URL}/users`,
-  );
-
-  if (loading) {
+  if (usersLoading) {
     return (
       <MessageContainer>
         <CircularProgress />
@@ -21,11 +23,11 @@ const Home = () => {
     );
   }
 
-  if (error) {
+  if (usersError) {
     return (
       <MessageContainer>
         <Box>Error loading users</Box>
-        <Button variant="contained" onClick={() => refetch()}>
+        <Button variant="contained" onClick={() => usersRefetch()}>
           Retry
         </Button>
       </MessageContainer>
@@ -43,14 +45,14 @@ const Home = () => {
         }}
       >
         <UploadInput />
-        <Button variant="contained" onClick={() => setIsCreateUserOpen(true)}>
+        <Button variant="contained" onClick={toggleCreateUserModal}>
           Create User
         </Button>
       </Box>
-      <UsersTable users={data.users} />
+      <UsersTable users={users} />
       <CreateUserModal
         open={isCreateUserOpen}
-        handleClose={() => setIsCreateUserOpen(!isCreateUserOpen)}
+        handleClose={toggleCreateUserModal}
       />
     </>
   );
