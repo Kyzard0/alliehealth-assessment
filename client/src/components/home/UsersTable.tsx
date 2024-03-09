@@ -5,6 +5,8 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
+import { User } from "../../contexts/UsersContext";
+import dayjs from "dayjs";
 
 const TableHeaderCell = (props: Record<any, any>) => (
   <TableCell
@@ -16,12 +18,7 @@ const TableHeaderCell = (props: Record<any, any>) => (
 );
 
 type Props = {
-  users: {
-    id: number;
-    first_name: string;
-    last_name: string;
-    email: string;
-  }[];
+  users: User[];
 };
 
 const UsersTable = ({ users }: Props) => (
@@ -31,6 +28,7 @@ const UsersTable = ({ users }: Props) => (
         <TableRow>
           <TableHeaderCell>Name</TableHeaderCell>
           <TableHeaderCell align="right">Email</TableHeaderCell>
+          <TableHeaderCell align="right">Day of Birth</TableHeaderCell>
         </TableRow>
       </TableHead>
       <TableBody>
@@ -43,6 +41,7 @@ const UsersTable = ({ users }: Props) => (
               {`${user.first_name} ${user.last_name}`}
             </TableCell>
             <TableCell align="right">{user.email}</TableCell>
+            <TableCell align="right">{user.date_of_birth ? dayjs(user.date_of_birth).format('MM/DD/YYYY') : '-'}</TableCell>
           </TableRow>
         ))}
       </TableBody>

@@ -1,7 +1,9 @@
 import { Alert, Box, Button, TextField } from "@mui/material";
 import useAxios from "axios-hooks";
-import { FieldValues, useForm } from "react-hook-form";
+import { Controller, FieldValues, useForm } from "react-hook-form";
 import { useUsersContext } from "../../contexts/UsersContext";
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 
 type Props = {
   onSubmit: () => void;
@@ -9,7 +11,7 @@ type Props = {
 
 const CreateForm = ({ onSubmit }: Props) => {
   const { usersRefetch } = useUsersContext();
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit, control } = useForm();
   const [{ loading, error }, executePost] = useAxios(
     {
       url: `${process.env.REACT_APP_SERVER_BASE_URL}/users`,
@@ -49,6 +51,24 @@ const CreateForm = ({ onSubmit }: Props) => {
           {...register("lastName")}
         />
         <TextField label="Email" variant="outlined" {...register("email")} />
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <Controller
+            control={control}
+            name="birthDate"
+            render={({ field }) => {
+              return (
+                <DatePicker
+                  label="Day of Birth"
+                  value={field.value}
+                  inputRef={field.ref}
+                  onChange={(date) => {
+                    field.onChange(date);
+                  }}
+                />
+              );
+            }}
+          />
+        </LocalizationProvider>
         <Button variant="contained" type="submit" disabled={loading}>
           Create User
         </Button>
